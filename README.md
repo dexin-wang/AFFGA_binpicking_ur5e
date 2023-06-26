@@ -26,5 +26,16 @@ A ROS package for bin-picking using AFFGA-Net with ur5e.
 ## 3 run
 
 (1) run robot, camera, robotiq, hand_eye_calibration:
+```python
+roslaunch AFFGA_binpicking_ur5e grasp_affga.launch
+```
 
-> roslaunch 
+
+(2) run policy and grasp detection:
+```python
+rosrun AFFGA_binpicking_ur5e policy.py
+rosrun AFFGA_binpicking_ur5e detect_grasps.py
+```
+
+==Notice:==
+> In our setting, `hand_eye_calibration` uses py2, `policy.py` and `detect_grasps.py` use py3, so run them separately.
