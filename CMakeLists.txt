@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.12)
-project(grasp_binpicking)
+project(AFFGA_binpicking_ur5e)
 
 add_definitions( -DROS_BUILD )
 
