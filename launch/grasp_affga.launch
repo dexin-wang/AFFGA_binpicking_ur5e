@@ -1,0 +1,28 @@
+<launch>
+    <!-- *1. Start realsense d435i -->
+    <include file="$(find realsense2_camera)/launch/rs_aligned_depth.launch" />
+
+    <!-- *2. start the robot -->
+    <include file="$(find ur_robot_driver)/launch/ur5e_bringup.launch">
+        <arg name="robot_ip" value="192.168.0.11" />
+    </include>
+
+    <!-- *3. robotiq -->
+    <!-- 建立连接 -->
+    <node pkg="robotiq_2f_gripper_control" type="Robotiq2FGripperRtuNode_my.py" name="Robotiq2FGripperRtuNode_my" output="screen" /> 
+    <!-- 激活爪子的控制指令 -->
+    <node pkg="robotiq_2f_gripper_control" type="Robotiq2FGripperSimpleController_my.py" name="Robotiq2FGripperSimpleController_my" output="screen" />
+
+    <!-- *4. 手眼标定-眼在手外 -->
+    <include file="$(find easy_handeye)/launch/publish_ur5e_eyeonhand.launch" />
+
+    <!-- *5. policy -->
+    <!-- <node pkg="grasp_binpicking" type="policy.py" name="policy" output="screen" />  -->
+
+    <!-- *6. grasp method -->
+    <!-- <node pkg="grasp_binpicking" type="detect_grasps.py" name="detect_grasps" output="screen" />  -->
+
+    <!-- *rviz -->
+    <!-- <node pkg="rviz" type="rviz" name="rviz" args="-d /home/cvpr/kinova_manipulation_ws/src/grasp/launch/config.rviz" required="true" /> -->
+
+</launch>
