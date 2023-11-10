@@ -18,7 +18,7 @@ from std_msgs.msg import Int8
 from sensor_msgs.msg import Image, PointCloud2
 from sensor_msgs import point_cloud2
 # from sensor_msgs.msg import Image
-from grasp_binpicking.msg import graspPose
+from AFFGA_binpicking_ur5e.msg import graspPose
 from graspnetAPI import GraspGroup
 import geometry_msgs.msg as geometry_msgs
 import sys
