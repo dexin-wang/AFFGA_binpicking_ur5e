@@ -14,7 +14,7 @@ import geometry_msgs.msg as geometry_msgs
 from ur.ur5e import UR5e
 from robotiq import Robotiq140
 from std_msgs.msg import Int8, String
-from grasp_binpicking.msg import graspPose
+from AFFGA_binpicking_ur5e.msg import graspPose
 import utils.tool as utool
 import tf2_ros
 
