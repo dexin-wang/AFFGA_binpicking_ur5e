@@ -10,24 +10,36 @@
 import sys
 import os
 
-
 import cv2
 import torch
 import time
 import math
 from skimage.feature import peak_local_max
 import numpy as np
-from grasp_methods.affga_net.sgdn.models.ggcnn.common import post_process_output
 from grasp_methods.affga_net.sgdn.models.loss import get_pred
 from grasp_methods.affga_net.sgdn.models import get_network
-# from grasp_methods.sgdn.models.SWIN1.config import getconfig 
-# from grasp_methods.affga_net.sgdn.models.SWIN.config import getconfig 
-# from grasp_methods.affga_net.sgdn.models.SWIN1.config import getconfig as getconfig1
-
-# from skimage.draw import line
 from .utils.img import Image, RGBImage, DepthImage
-# from grasp_methods.affga_net.sgdn.models.SWIN.graspnet import GraspNet2
-# from grasp_methods.affga_net.sgdn.models.SWIN1.graspnet import GraspNet
+
+def post_process_output(able_pred, angle_pred, width_pred, GRASP_WIDTH_MAX):
+    """
+    :param able_pred:  (1, 1, h, w)           (as torch Tensors)
+    :param angle_pred: (1, angle_k, h, w)     (as torch Tensors)
+    :param width_pred: (1, angle_k, h, w)     (as torch Tensors)
+    """
+    # 抓取置信度
+    able_pred = able_pred.squeeze().cpu().numpy()    # (h, w)
+    # able_pred = gaussian(able_pred, 1.0, preserve_range=True)
+    # 抓取角
+    angle_pred = np.argmax(angle_pred.cpu().numpy().squeeze(), 0)   # (h, w)    每个元素表示预测的抓取角类别
+    # 根据抓取角类别获取抓取宽度
+    size = angle_pred.shape[0]
+    cols = np.arange(size)[np.newaxis, :]
+    cols = cols.repeat(size, axis=0)
+    rows = cols.T
+    width_pred = width_pred.squeeze().cpu().numpy() * GRASP_WIDTH_MAX  # (angle_k, h, w)  实际长度
+    width_pred = width_pred[angle_pred, rows, cols] # (h, w)
+    return able_pred, angle_pred, width_pred
+    
 def depth2Gray(im_depth):
     """
     将深度图转至三通道8位灰度图
